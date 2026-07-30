@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.amplitude.com/script/d3d035adc4caf126e9a7efce378ee6af.js"></script>
+    <script>
+        window.amplitude.add(window.sessionReplay.plugin({ sampleRate: 1 }));
+        window.amplitude.init('d3d035adc4caf126e9a7efce378ee6af', {
+            fetchRemoteConfig: true,
+            autocapture: true
+        });
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Northstar Analytics Demo</title>
+    <meta name="description" content="A simple landing page demo for product analytics and conversion tracking." />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div id="success-toast" class="success-toast" role="status" aria-live="polite"></div>
+
+    <main class="page">
+        <section class="hero">
+            <div>
+                <span class="eyebrow">Product analytics demo</span>
+                <h1>Turn product curiosity into confident growth decisions.</h1>
+                <p class="lead">
+                    Northstar helps teams understand activation, retention, and conversion with a
+                    simple event framework that scales from day one.
+                </p>
+                <div class="actions">
+                    <a class="btn btn-primary" href="#signup" id="cta-signup">Sign Up</a>
+                    <a class="btn btn-secondary" href="#demo" id="cta-demo">Request Demo</a>
+                </div>
+            </div>
+
+            <div class="card" aria-label="Product highlights">
+                <h2>What you can track</h2>
+                <ul>
+                    <li>New user activation</li>
+                    <li>Feature adoption by cohort</li>
+                    <li>Funnel drop-off by channel</li>
+                    <li>Retention trends over time</li>
+                </ul>
+                <div class="metrics">
+                    <div class="metric">
+                        <strong>+28%</strong>
+                        activation
+                    </div>
+                    <div class="metric">
+                        <strong>4.8/5</strong>
+                        user rating
+                    </div>
+                    <div class="metric">
+                        <strong>24/7</strong>
+                        insights
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="panel" id="signup">
+                <h3>Start free</h3>
+                <p>
+                    Create your workspace, connect your product events, and start seeing the most
+                    important stories in your user journey.
+                </p>
+            </div>
+            <div class="panel" id="demo">
+                <h3>Book a guided walkthrough</h3>
+                <p>
+                    See how Northstar can help your team discover friction points and grow faster
+                    with a tailored walkthrough.
+                </p>
+            </div>
+        </section>
+
+        <footer>
+            Built as a lightweight traffic source for product analytics experiments.
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toast = document.getElementById('success-toast');
+
+            const showToast = (message) => {
+                if (!toast) return;
+
+                toast.textContent = message;
+                toast.classList.remove('show');
+                void toast.offsetWidth;
+                toast.classList.add('show');
+
+                clearTimeout(toast.hideTimer);
+                toast.hideTimer = setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.textContent = '';
+                }, 2200);
+            };
+
+            const trackCta = (id, label, successMessage) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                el.addEventListener('click', function () {
+                    if (window.amplitude && typeof window.amplitude.track === 'function') {
+                       window.amplitude.track(label + ' Clicked', {
+                                       page: 'landing_page'
+                                    });
+                    }
+
+                    showToast(successMessage);
+                });
+            };
+
+            trackCta('cta-signup', 'Sign Up', 'Sign up requested');
+            trackCta('cta-demo', 'Request Demo', 'Demo requested');
+        });
+    </script>
+</body>
+
+</html>
